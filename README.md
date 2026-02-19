@@ -2,6 +2,10 @@
 
 **A comprehensive guide to building smart contracts on Stellar with Soroban**
 
+[![CI](https://github.com/Soroban-Cookbook/Soroban-Cookbook/actions/workflows/test.yml/badge.svg)](https://github.com/Soroban-Cookbook/Soroban-Cookbook/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook/branch/main/graph/badge.svg)](https://codecov.io/gh/Soroban-Cookbook/Soroban-Cookbook)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## 📖 About
 
 The Soroban Cookbook is a developer's guide to building smart contracts on the Stellar network using Soroban. This repository provides clear, well-documented examples and practical patterns for developers at every level—from your first "Hello World" contract to complex DeFi protocols.

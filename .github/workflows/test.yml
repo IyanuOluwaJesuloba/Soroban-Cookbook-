@@ -46,8 +46,9 @@ jobs:
     name: Test Suite
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        rust: [stable]
+        rust: ["1.74", stable]
     steps:
       - uses: actions/checkout@v4
 
@@ -118,3 +119,28 @@ jobs:
 
       - name: Run security audit
         run: cargo audit
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+
+      - name: Install cargo-tarpaulin
+        run: cargo install cargo-tarpaulin
+
+      - name: Generate coverage
+        run: cargo tarpaulin --workspace --all-features --out xml --timeout 300
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./cobertura.xml
+          fail_ci_if_error: false
