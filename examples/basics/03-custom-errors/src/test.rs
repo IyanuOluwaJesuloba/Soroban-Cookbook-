@@ -159,9 +159,9 @@ fn test_rate_limit_exceeded_error() {
     let result = client.try_check_rate_limit(&caller, &5u32, &max_operations);
     assert_eq!(result, Ok(()));
 
-    // Test with zero address (should return Unauthorized)
-    let zero_address = Address::from_contract_id(&[0; 32]);
-    let result = client.try_check_rate_limit(&zero_address, &1u32, &max_operations);
+    // Test with contract address calling itself (should return Unauthorized)
+    let contract_address = env.current_contract_address();
+    let result = client.try_check_rate_limit(&contract_address, &1u32, &max_operations);
     assert_eq!(result, Err(StellarError::from_contract_error(ContractError::Unauthorized)));
 }
 

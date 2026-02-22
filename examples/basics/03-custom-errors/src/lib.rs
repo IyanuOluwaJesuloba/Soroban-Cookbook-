@@ -210,17 +210,18 @@ impl CustomErrorsContract {
     ///
     /// # Errors
     /// * `RateLimitExceeded` - If caller exceeded rate limit
-    /// * `Unauthorized` - If caller address is invalid (zero address)
+    /// * `Unauthorized` - If caller address is invalid (None equivalent)
     pub fn check_rate_limit(
         env: Env,
         caller: Address,
         operation_count: u32,
         max_operations: u32
     ) -> Result<(), ContractError> {
-        // Check if caller is zero address (invalid)
-        if caller == Address::from_contract_id(&[0; 32]) {
+        // Check if caller is the contract itself (simplified invalid check)
+        let contract_address = env.current_contract_address();
+        if caller == contract_address {
             env.events().publish(symbol_short!("invalid_caller"), (
-                "Zero address not allowed",
+                "Contract cannot call itself",
                 caller,
             ));
             Err(ContractError::Unauthorized)
