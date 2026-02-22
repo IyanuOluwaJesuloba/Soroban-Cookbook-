@@ -10,7 +10,7 @@ env:
   CARGO_TERM_COLOR: always
   # Rust toolchain to use — must support the `rust-version` declared in the
   # workspace Cargo.toml (currently 1.74) plus the wasm32 target.
-  RUST_VERSION: "1.82"
+  RUST_VERSION: "stable"
 
 jobs:
   # ─────────────────────────────────────────────────────────────────────────
