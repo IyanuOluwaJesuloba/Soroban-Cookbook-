@@ -38,6 +38,15 @@
 //! by topic position. Designing topics intentionally lets callers narrow results
 //! without scanning every event.
 //!
+//! ### Topic Layout Convention
+//! ```text
+//! topic[0]  — event category / action name  (always present, used as primary filter)
+//! topic[1]  — primary entity (from-address, contract-id, pool-id …)
+//! topic[2]  — secondary entity (to-address, token-id …)        [optional]
+//! topic[3]  — sub-type or status                               [optional]
+//! data      — non-indexed payload (amounts, metadata, structs)
+//! ```
+//!
 //! ### Best Practices
 //! - Put the most-commonly filtered field in the earliest topic position.
 //! - Keep topics to `Symbol` / `Address` / small integers — they must be
