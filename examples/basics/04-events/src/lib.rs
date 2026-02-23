@@ -35,44 +35,6 @@
 
 #![no_std]
 
-use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env, Symbol};
-
-/// Event-emitting contract demonstrating both basic emission and
-/// query-friendly topic design.
-//! Demonstrates how to emit well-structured events in Soroban contracts using:
-//!
-//! - **Custom event types** – `#[contracttype]` enums/structs as event data
-//! - **Multiple topics** – up to 4 topic slots (contract address consumes none)
-//! - **Indexed parameters** – placing searchable fields in topics, payload in data
-//! - **Naming conventions** – `(contract_name, action)` as the first two topics
-//!
-//! ## Soroban Event Anatomy
-//!
-//! ```text
-//! env.events().publish(
-//!     (topic_1, topic_2, topic_3, topic_4),  // up to 4 topics; indexed for off-chain search
-//!     data_payload,                           // arbitrary SCVal; not indexed
-//! );
-//! ```
-//!
-//! **Topics** should contain discrete, filterable identifiers (contract name,
-//! action type, primary key, secondary key).  **Data** holds the rich payload
-//! that off-chain consumers decode after matching on topics.
-//!
-//! ## Event Naming Convention
-//!
-//! Adopt a consistent `(contract, action, [key...])` topic layout so that
-//! indexers and monitoring tools can build efficient filters:
-//!
-//! | Topic slot | Purpose            | Example              |
-//! |------------|--------------------|----------------------|
-//! | 0          | Contract namespace | `"events"`           |
-//! | 1          | Action name        | `"transfer"`         |
-//! | 2          | Primary index      | `sender: Address`    |
-//! | 3          | Secondary index    | `recipient: Address` |
-
-#![no_std]
-
 use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Address, Env, Symbol};
 
 // ---------------------------------------------------------------------------
@@ -120,9 +82,6 @@ pub struct EventsContract;
 impl EventsContract {
     // ==================== BASIC EMISSION ====================
 
-    /// Emits a simple event with topic ("simple",) and data value.
-    ///
-    /// Off-chain query: filter topic[0] == "simple"
     // -----------------------------------------------------------------------
     // Example 1 – Transfer event (4 topics + structured data)
     // -----------------------------------------------------------------------
@@ -238,9 +197,14 @@ impl EventsContract {
     ///   • Catch swaps on one pool   → all three topics fixed
     ///
     /// Keep category and action as short Symbols (≤ 9 chars, symbol_short!).
-    pub fn emit_namespaced(env: Env, category: Symbol, action: Symbol, pool_id: Symbol, amount: u64) {
-        env.events()
-            .publish((category, action, pool_id), amount);
+    pub fn emit_namespaced(
+        env: Env,
+        category: Symbol,
+        action: Symbol,
+        pool_id: Symbol,
+        amount: u64,
+    ) {
+        env.events().publish((category, action, pool_id), amount);
     }
 
     /// Emits a status-change event with a 4-topic layout:
@@ -256,8 +220,10 @@ impl EventsContract {
     ///   • Specific old → new transitions for audit trails
     pub fn emit_status_change(env: Env, entity_id: Symbol, old_status: Symbol, new_status: Symbol) {
         let ledger = env.ledger().sequence();
-        env.events()
-            .publish((symbol_short!("status"), entity_id, old_status, new_status), ledger);
+        env.events().publish(
+            (symbol_short!("status"), entity_id, old_status, new_status),
+            ledger,
+        );
     }
 }
 
